@@ -33,7 +33,7 @@ trait SupportsCertificateCheck
         $this->certificate_issuer = $certificate->getIssuer();
         $this->save();
 
-        $this->recordScanScan('certificate');
+        $this->recordScan('certificate');
 
         $this->fireEventsForUpdatedMonitorWithCertificate($this, $certificate);
     }
