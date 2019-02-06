@@ -26,8 +26,6 @@ trait SupportsUptimeCheck
             if ($monitor->getOriginal('uptime_status') != $monitor->uptime_status) {
                 $monitor->uptime_status_last_change_date = Carbon::now();
             }
-
-            $monitor->record('uptime');
         });
     }
 
@@ -85,6 +83,8 @@ trait SupportsUptimeCheck
         $this->uptime_check_failed_event_fired_on_date = null;
         $this->save();
 
+        $this->recordScanScan('uptime');
+
         if ($wasFailing) {
             $downtimePeriod = new Period($lastStatusChangeDate, $this->uptime_last_check_date);
 
@@ -103,6 +103,8 @@ trait SupportsUptimeCheck
         $this->uptime_last_check_date = Carbon::now();
         $this->uptime_check_failure_reason = $reason;
         $this->save();
+
+        $this->recordScanScan('uptime');
 
         if ($this->shouldFireUptimeCheckFailedEvent()) {
             $this->uptime_check_failed_event_fired_on_date = Carbon::now();
