@@ -83,7 +83,7 @@ trait SupportsUptimeCheck
         $this->uptime_check_failed_event_fired_on_date = null;
         $this->save();
 
-        $this->recordScanScan('uptime');
+        $this->recordScan('uptime');
 
         if ($wasFailing) {
             $downtimePeriod = new Period($lastStatusChangeDate, $this->uptime_last_check_date);
@@ -104,7 +104,7 @@ trait SupportsUptimeCheck
         $this->uptime_check_failure_reason = $reason;
         $this->save();
 
-        $this->recordScanScan('uptime');
+        $this->recordScan('uptime');
 
         if ($this->shouldFireUptimeCheckFailedEvent()) {
             $this->uptime_check_failed_event_fired_on_date = Carbon::now();
