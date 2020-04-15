@@ -2,14 +2,14 @@
 
 namespace Spatie\UptimeMonitor\Models;
 
-use Spatie\Url\Url;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\UptimeMonitor\Models\Enums\UptimeStatus;
 use Spatie\UptimeMonitor\Exceptions\CannotSaveMonitor;
 use Spatie\UptimeMonitor\Models\Enums\CertificateStatus;
-use Spatie\UptimeMonitor\Models\Traits\SupportsUptimeCheck;
+use Spatie\UptimeMonitor\Models\Enums\UptimeStatus;
 use Spatie\UptimeMonitor\Models\Presenters\MonitorPresenter;
 use Spatie\UptimeMonitor\Models\Traits\SupportsCertificateCheck;
+use Spatie\UptimeMonitor\Models\Traits\SupportsUptimeCheck;
+use Spatie\Url\Url;
 
 class Monitor extends Model
 {
@@ -18,6 +18,8 @@ class Monitor extends Model
     use MonitorPresenter;
 
     protected $guarded = [];
+
+    protected $appends = ['raw_url'];
 
     protected $dates = [
         'uptime_last_check_date',
@@ -62,11 +64,19 @@ class Monitor extends Model
         return Url::fromString($this->attributes['url']);
     }
 
+    /**
+     * @return string
+     */
+    public function getRawUrlAttribute()
+    {
+        return (string) $this->url;
+    }
+
     public static function boot()
     {
         parent::boot();
 
-        static::saving(function (Monitor $monitor) {
+        static::saving(function (self $monitor) {
             if (static::alreadyExists($monitor)) {
                 throw CannotSaveMonitor::alreadyExists($monitor);
             }

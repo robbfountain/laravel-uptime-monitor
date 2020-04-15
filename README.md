@@ -1,8 +1,8 @@
 # A powerful, easy to configure uptime monitor
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-uptime-monitor.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-uptime-monitor)
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/spatie/laravel-uptime-monitor/master.svg?style=flat-square)](https://travis-ci.org/spatie/laravel-uptime-monitor)
+[![MIT Licensed](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/spatie/laravel-uptime-monitor/run-tests?label=tests)
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-uptime-monitor.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-uptime-monitor)
 [![StyleCI](https://styleci.io/repos/67774357/shield?branch=master)](https://styleci.io/repos/67774357)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-uptime-monitor.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-uptime-monitor)
@@ -41,13 +41,13 @@ return [
         'location' => '',
 
         /*
-         * To keep reminding you that an uptime check failed, notifications
+         * To keep reminding you that a site is down, notifications
          * will be resent every given number of minutes.
          */
         'resend_uptime_check_failed_notification_every_minutes' => 60,
 
         'mail' => [
-            'to' => 'your@email.com',
+            'to' => ['your@email.com'],
         ],
 
         'slack' => [
@@ -67,6 +67,7 @@ return [
     ],
 
     'uptime_check' => [
+
         /*
          * When the uptime check could reach the url of a monitor it will pass the response to this class
          * If this class determines the response is valid, the uptime check will be regarded as succeeded.
@@ -80,23 +81,38 @@ return [
          * given number of minutes ago. If you change this setting you have to manually
          * update the `uptime_check_interval_in_minutes` value of your existing monitors.
          *
-         * When an the uptime check failed we'll check the uptime every time `monitor:check-uptime` runs
-         * regardless of this setting.
+         * When an uptime check fails we'll check the uptime for that monitor every time `monitor:check-uptime`
+         * runs regardless of this setting.
          */
         'run_interval_in_minutes' => 5,
 
         /*
-         * To speed up the uptime checking process uptime monitor can perform the uptime check of several
+         * To speed up the uptime checking process the package can perform the uptime check of several
          * monitors concurrently. Set this to a lower value if you're getting weird errors
          * running the uptime check.
          */
         'concurrent_checks' => 10,
 
         /*
-         * The uptime check will fail if the configured url does not respond after the
+         * The uptime check for a monitor will fail if the url does not respond after the
          * given number of seconds.
          */
         'timeout_per_site' => 10,
+
+        /*
+         * Because networks can be a bit unreliable the package can make three attempts
+         * to connect to a server in one uptime check. You can specify the time in
+         * milliseconds between each attempt.
+         */
+        'retry_connection_after_milliseconds' => 100,
+
+        /*
+         * If you want to change the default Guzzle client behaviour, you can do so by
+         * passing custom options that will be used when making requests.
+         */
+        'guzzle_options' => [
+            // 'allow_redirects' => false,
+        ],
 
         /*
          * Fire `Spatie\UptimeMonitor\Events\MonitorFailed` event only after
@@ -112,7 +128,7 @@ return [
         /*
          * When reaching out to the sites these headers will be added.
          */
-        'additional_headers' => []
+        'additional_headers' => [],
     ],
 
     'certificate_check' => [
@@ -130,9 +146,15 @@ return [
      * own model here. The only requirement is that it should extend
      * `Spatie\UptimeMonitor\Models\Monitor`.
      */
-     'monitor_model' => Spatie\UptimeMonitor\Models\Monitor::class,
+    'monitor_model' => Spatie\UptimeMonitor\Models\Monitor::class,
 ];
 ```
+
+## Support us
+
+We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us). 
+
+We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
 
 ## API
 
@@ -163,25 +185,10 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 If you discover any security related issues, please email freek@spatie.be instead of using the issue tracker.
 
-## Postcardware
-
-You're free to use this package, but if it makes it to your production environment we highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using.
-
-Our address is: Spatie, Samberstraat 69D, 2060 Antwerp, Belgium.
-
-We publish all received postcards [on our company website](https://spatie.be/en/opensource/postcards).
-
 ## Credits
 
 - [Freek Van der Herten](https://github.com/freekmurze)
 - [All Contributors](../../contributors)
-
-## Support us
-
-Spatie is a webdesign agency based in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
-
-Does your business depend on our contributions? Reach out and support us on [Patreon](https://www.patreon.com/spatie). 
-All pledges will be dedicated to allocating workforce on maintenance and new awesome stuff.
 
 ## License
 
