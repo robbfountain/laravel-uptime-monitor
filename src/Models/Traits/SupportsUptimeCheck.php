@@ -27,7 +27,7 @@ trait SupportsUptimeCheck
                 $monitor->uptime_status_last_change_date = Carbon::now();
             }
 
-            $monitor->record('uptime');
+          //  $monitor->record('uptime');
         });
     }
 
